@@ -3,7 +3,7 @@ package com.example.shoptienhieu.security.authService;
 import com.example.shoptienhieu.constants.RoleName;
 import com.example.shoptienhieu.constants.TextStatus;
 import com.example.shoptienhieu.entities.*;
-import com.example.shoptienhieu.exception.ResourceNotFoundException;
+import com.example.shoptienhieu.exception.*;
 import com.example.shoptienhieu.repository.RoleRepository;
 import com.example.shoptienhieu.repository.ShopRepository;
 import com.example.shoptienhieu.repository.UserRepository;
@@ -20,6 +20,7 @@ import com.example.shoptienhieu.dto.response.BaseRes;
 import com.example.shoptienhieu.dto.response.authRes.GetInfoRes;
 import com.example.shoptienhieu.dto.response.authRes.LoginRes;
 import com.example.shoptienhieu.dto.response.authRes.TokenRefreshRes;
+import com.example.shoptienhieu.service.ValidatorService;
 import com.example.shoptienhieu.service.userService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -99,7 +100,15 @@ public class AuthServiceImpl implements AuthService {
     }
 // signup
     @Override
-    public BaseRes<?> registerUser(RegisterReq registerReq) {
+    public BaseRes<?> registerUser(RegisterReq registerReq) throws EmailException, PhoneException, DayException, FullNameException {
+        ValidatorService.emailCheck(registerReq.getEmail());
+
+        ValidatorService.phoneCheck(registerReq.getPhone());
+
+        ValidatorService.dateCheck(registerReq.getBirthday().toString());
+
+        ValidatorService.nameCheck(registerReq.getFirst_name());
+
         if (userRepository.existsByUsername(registerReq.getUsername())) {
             return new BaseRes<>(HttpStatus.FORBIDDEN.value(), TextStatus.USERNAME_EXIST);
         }
@@ -107,6 +116,8 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.existsByEmail(registerReq.getEmail().toLowerCase())) {
             return new BaseRes<>(HttpStatus.FORBIDDEN.value(), TextStatus.EMAIL_EXIST);
         }
+
+
 
         User user = new User(registerReq.getUsername(),
                 encoder.encode(registerReq.getPassword()), registerReq.getEmail().toLowerCase(), registerReq.getFirst_name(),

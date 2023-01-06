@@ -4,6 +4,10 @@ package com.example.shoptienhieu.controllers;
 import com.example.shoptienhieu.constants.Path;
 import com.example.shoptienhieu.dto.request.UpdatePasswordRequest;
 import com.example.shoptienhieu.dto.request.userReq.ChangePasswordReq;
+import com.example.shoptienhieu.exception.DayException;
+import com.example.shoptienhieu.exception.EmailException;
+import com.example.shoptienhieu.exception.FullNameException;
+import com.example.shoptienhieu.exception.PhoneException;
 import com.example.shoptienhieu.security.authService.AuthService;
 import com.example.shoptienhieu.dto.request.authReq.LogOutReq;
 import com.example.shoptienhieu.dto.request.authReq.LoginReq;
@@ -35,7 +39,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.authenticateUser(loginReq));
     }
     @PostMapping(Path.REGISTER)
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterReq signUpRequest) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterReq signUpRequest) throws PhoneException, DayException, FullNameException, EmailException {
         logger.info("Request to register");
         return ResponseEntity.ok(authService.registerUser(signUpRequest));
     }

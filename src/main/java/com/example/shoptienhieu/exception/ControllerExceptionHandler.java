@@ -15,10 +15,31 @@ public class ControllerExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public BaseRes resourceNotFoundException(ResourceNotFoundException ex) {
+    @ExceptionHandler(DayException.class)
+    public BaseRes dayException(DayException ex) {
         logger.error(ex.getMessage());
-        return new BaseRes<>(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+        return new BaseRes<>(HttpStatus.FORBIDDEN.value(), ex.getMessage());
+
+    }
+
+    @ExceptionHandler(EmailException.class)
+    public BaseRes emailException(EmailException ex) {
+        logger.error(ex.getMessage());
+        return new BaseRes<>(HttpStatus.FORBIDDEN.value(), ex.getMessage());
+
+    }
+
+    @ExceptionHandler(FullNameException.class)
+    public BaseRes fullNameException(DayException ex) {
+        logger.error(ex.getMessage());
+        return new BaseRes<>(HttpStatus.FORBIDDEN.value(), ex.getMessage());
+
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public BaseRes phoneException(ResourceNotFoundException ex) {
+        logger.error(ex.getMessage());
+        return new BaseRes<>(HttpStatus.FORBIDDEN.value(), ex.getMessage());
 
     }
 
